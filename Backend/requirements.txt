@@ -1,0 +1,7 @@
+fastapi==0.116.1
+groq==0.31.0
+pandas==2.3.2
+Pillow==11.3.0
+protobuf==6.32.0
+python-dotenv==1.1.1
+google-genai==1.31.0

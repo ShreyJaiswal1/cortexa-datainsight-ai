@@ -7,8 +7,8 @@ export function MessageList({ messages, isLoading }) {
     <div className='flex-1 overflow-y-auto px-6 py-6 space-y-4'>
       {/* Empty state */}
       {messages.length === 0 && !isLoading && (
-        <div className='flex h-full items-center justify-center'>
-          <p className='text-muted-foreground text-center'>
+        <div className='flex h-full items-center justify-center min-h-[60vh]'>
+          <p className='text-muted-foreground'>
             Start a conversation or upload a file...
           </p>
         </div>
