@@ -1,9 +1,6 @@
-import { SignIn } from '@clerk/nextjs';
+// Server Component
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return (
-    <div className='flex items-center justify-center h-screen'>
-      <SignIn />
-    </div>
-  );
+  redirect('/auth'); // go to the combined page, sign-in tab selected
 }
