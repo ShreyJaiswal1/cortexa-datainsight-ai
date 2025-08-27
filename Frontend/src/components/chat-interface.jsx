@@ -1,15 +1,9 @@
-"use client"
+'use client';
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { MessageList } from './message-list';
 import { ChatInput } from './chat-input';
 
-/**
- * ChatInterface — optimized & fixed
- * - Auto scroll to bottom (bottomRef defined)
- * - Consistent theme tokens (bg-background, text-foreground)
- * - Cleaner state handling for files
- */
 export function ChatInterface() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -17,7 +11,6 @@ export function ChatInterface() {
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
 
-  // Revoke object URLs on cleanup
   useEffect(() => {
     return () => {
       messages.forEach((msg) => {
@@ -26,7 +19,6 @@ export function ChatInterface() {
     };
   }, [messages]);
 
-  // Auto scroll to bottom
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -35,6 +27,35 @@ export function ChatInterface() {
 
   const addMessage = (msg) => setMessages((prev) => [...prev, msg]);
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000';
+  useEffect(() => {
+    const handler = async (e) => {
+      const bins = e?.detail?.bins ?? 20;
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${API_BASE}/api/data/histogram/?bins=${bins}`);
+        const data = await res.json();
+
+addMessage({
+  type: 'bot',
+  contentType: 'chart',
+  content: data,
+});
+      } catch (err) {
+        console.error(err);
+        addMessage({
+          type: 'bot',
+          contentType: 'text',
+          content: '⚠️ Could not generate histogram.',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    window.addEventListener('cortexa:visualize', handler);
+    return () => window.removeEventListener('cortexa:visualize', handler);
+  }, [API_BASE]);
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     const userMessage = input.trim();
@@ -83,14 +104,20 @@ export function ChatInterface() {
 
       let response;
       if (isImage) {
-        response = await axios.post(`${API_BASE}/api/image/detect-object`, formData);
+        response = await axios.post(
+          `${API_BASE}/api/image/detect-object`,
+          formData
+        );
         addMessage({
           type: 'bot',
           content: response.data.detection_result,
           contentType: 'text',
         });
       } else {
-        response = await axios.post(`${API_BASE}/api/data/upload-data/`, formData);
+        response = await axios.post(
+          `${API_BASE}/api/data/upload-data/`,
+          formData
+        );
         if (!response.data.analysis_result) {
           addMessage({
             type: 'bot',

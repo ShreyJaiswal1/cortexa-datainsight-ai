@@ -4,15 +4,11 @@ from PIL import Image
 import io
 import os
 from dotenv import load_dotenv
-
-# ✅ New Google GenAI SDK
 from google import genai
 from google.genai import types
 
-# Load environment variables
 load_dotenv()
 
-# Instantiate client with API key
 genai_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 router = APIRouter()

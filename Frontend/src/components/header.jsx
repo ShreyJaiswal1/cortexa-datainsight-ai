@@ -7,24 +7,19 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useTheme } from 'next-themes';
 import { Menu, Sun, Moon } from 'lucide-react';
 
-/**
- * Cortexa Header — simple, elegant, on‑brand
- * - Keeps your existing structure: logo, 3 nav links, theme toggle, Clerk UserButton, mobile sheet
- * - Subtle glass + border, electric‑blue accents, refined spacing/hover states
- * - No extra features or new deps
- */
 export default function Header() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => setMounted(true), []);
 
   return (
-    <header className='fixed inset-x-0 top-0 z-50 border-b border-border/40 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:bg-[111828]'>
+    <header className='fixed inset-x-0 top-0 z-50 border-b border-border/40 bg-background/70 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:bg-[#111828]'>
       <div className='mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6'>
         {/* Brand */}
         <Link href='/' className='flex items-center gap-2'>
-          <span className='text-xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-fuchsia-400 bg-clip-text text-transparent'>
+          <span className='text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent'>
             Cortexa
           </span>
         </Link>
@@ -32,24 +27,19 @@ export default function Header() {
         {/* Desktop nav */}
         <div className='hidden sm:flex items-center gap-6'>
           <nav className='flex items-center gap-6 text-sm font-medium text-foreground/80'>
-            {[
-              { href: '#features', label: 'Features' },
-              { href: '#pricing', label: 'Pricing' },
-              { href: '#about', label: 'About' },
-            ].map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className='relative transition-colors hover:text-foreground'
-              >
-                {item.label}
-                <span className='absolute left-0 -bottom-1 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full' />
-              </a>
-            ))}
+            <a
+              href='https://github.com/ShreyJaiswal1/cortexa-datainsight-ai'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='group relative transition-colors hover:text-foreground'
+            >
+              GitHub
+              <span className='pointer-events-none absolute left-0 -bottom-1 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full' />
+            </a>
           </nav>
 
           <div className='ml-2 flex items-center gap-3'>
-            {/* Theme toggle (hydration-safe) */}
+            {/* Theme toggle */}
             {mounted && (
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -83,7 +73,7 @@ export default function Header() {
             </button>
           )}
 
-          <Sheet>
+          <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <button
                 className='inline-grid h-9 w-9 place-items-center rounded-lg hover:bg-muted/70 transition-colors'
@@ -95,22 +85,12 @@ export default function Header() {
             <SheetContent side='right' className='flex flex-col gap-6 p-6'>
               <nav className='flex flex-col gap-4 text-base font-medium'>
                 <a
-                  href='#features'
+                  href='https://github.com/ShreyJaiswal1/cortexa-datainsight-ai'
+                  target='_blank'
+                  rel='noopener noreferrer'
                   className='hover:text-primary transition-colors'
                 >
-                  Features
-                </a>
-                <a
-                  href='#pricing'
-                  className='hover:text-primary transition-colors'
-                >
-                  Pricing
-                </a>
-                <a
-                  href='#about'
-                  className='hover:text-primary transition-colors'
-                >
-                  About
+                  GitHub
                 </a>
               </nav>
               <div className='mt-auto'>

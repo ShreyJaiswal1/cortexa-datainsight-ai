@@ -14,11 +14,9 @@ export function ChatInput({
   const handleUploadButtonClick = () => fileInputRef?.current?.click();
 
   const onKeyDown = (e) => {
-    // Enter to send, Shift+Enter for newline
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (!isLoading && input.trim()) {
-        // submit the parent form
         e.currentTarget.form?.dispatchEvent(
           new Event('submit', { cancelable: true, bubbles: true })
         );
@@ -43,7 +41,6 @@ export function ChatInput({
           type='file'
           onChange={handleFileUpload}
           className='hidden'
-          // accept common images & data types you support
           accept='.png,.jpg,.jpeg,.webp,.csv,.xlsx,.xls,.json,.parquet'
         />
 

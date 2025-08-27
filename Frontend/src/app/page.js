@@ -20,7 +20,14 @@ export default function HomePage() {
   }
 
   return (
-    <main className='min-h-screen bg-gray-50 dark:bg-gray-900'>
+    <main className='relative min-h-screen overflow-hidden'>
+      {/* Gradient Mesh Background */}
+      <div className='absolute inset-0 -z-10 bg-gradient-to-b from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-black'>
+        <div className='absolute w-[40rem] h-[40rem] top-[-10rem] left-[-10rem] rounded-full bg-gradient-to-r from-blue-400/30 to-purple-400/30 blur-3xl animate-blob'></div>
+        <div className='absolute w-[35rem] h-[35rem] bottom-[-8rem] right-[-8rem] rounded-full bg-gradient-to-r from-pink-400/30 to-yellow-300/30 blur-3xl animate-blob animation-delay-2000'></div>
+        <div className='absolute w-[30rem] h-[30rem] top-[30%] left-[60%] rounded-full bg-gradient-to-r from-green-400/20 to-indigo-300/20 blur-3xl animate-blob animation-delay-4000'></div>
+      </div>
+
       {/* Header */}
       <header className='sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 backdrop-blur'>
         <div className='max-w-6xl mx-auto px-6 py-4 flex justify-between items-center'>
@@ -74,7 +81,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className='max-w-6xl mx-auto px-6 py-20 text-center'>
+      <section className='max-w-6xl mx-auto px-6 py-20 text-center relative z-10'>
         <h2 className='text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-gray-100 mb-6'>
           Welcome to{' '}
           <span className='text-blue-600 dark:text-blue-400'>Cortexa</span>
@@ -102,7 +109,7 @@ export default function HomePage() {
       {/* Features */}
       <section
         id='features'
-        className='max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-8'
+        className='max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10'
       >
         <FeatureCard
           title='🚀 Fast answers'
@@ -119,7 +126,7 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section id='how' className='max-w-6xl mx-auto px-6 py-16'>
+      <section id='how' className='max-w-6xl mx-auto px-6 py-16 relative z-10'>
         <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6'>
           How it works
         </h3>
@@ -170,7 +177,10 @@ export default function HomePage() {
       </section>
 
       {/* Security */}
-      <section id='security' className='max-w-6xl mx-auto px-6 py-16'>
+      <section
+        id='security'
+        className='max-w-6xl mx-auto px-6 py-16 relative z-10'
+      >
         <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4'>
           Security & Privacy
         </h3>
@@ -192,7 +202,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section id='faq' className='max-w-6xl mx-auto px-6 py-16'>
+      <section id='faq' className='max-w-6xl mx-auto px-6 py-16 relative z-10'>
         <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6'>
           Frequently Asked Questions
         </h3>
@@ -217,9 +227,34 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className='py-8 text-center text-gray-600 dark:text-gray-400'>
+      <footer className='py-8 text-center text-gray-600 dark:text-gray-400 relative z-10'>
         © {new Date().getFullYear()} Cortexa. All rights reserved.
       </footer>
+
+      {/* Background animations */}
+      <style jsx>{`
+        .animate-blob {
+          animation: blob 20s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        @keyframes blob {
+          0%,
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+        }
+      `}</style>
     </main>
   );
 }

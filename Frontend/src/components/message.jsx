@@ -3,11 +3,12 @@
 import { AnalysisCard } from '@/components/analysis-card';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
+import ChartAnalysis from './chart-analysis';
 export function Message({ msg }) {
   const isUser = msg.type === 'user';
   const isImage = msg.contentType === 'file' && msg.fileType === 'image';
   const isAnalysis = msg.contentType === 'analysis';
+  const isChart = msg.contentType === 'chart';
 
   const bubbleBase =
     'rounded-2xl px-4 py-3 shadow-sm ring-1 ring-black/5 dark:ring-white/5';
@@ -23,7 +24,11 @@ export function Message({ msg }) {
         </div>
       );
     }
-
+    if (isChart) {
+      return (
+        <ChartAnalysis data={msg.content} columns={msg.content.columns || []} />
+      );
+    }
     if (isImage) {
       return (
         <div className='flex flex-col items-center'>
@@ -83,10 +88,8 @@ export function Message({ msg }) {
               bubbleBase,
               bubbleTone,
               isAnalysis
-                ? // allow analysis card to span full container
-                  'max-w-full w-full p-0 ring-0 shadow-none dark:bg-neutral-950/20'
-                : // text/images stay compact
-                  'max-w-[min(85ch,100%)]',
+                ? 'max-w-full w-full p-0 ring-0 shadow-none dark:bg-neutral-950/20'
+                : 'max-w-[min(85ch,100%)]',
             ].join(' ')}
           >
             {content}

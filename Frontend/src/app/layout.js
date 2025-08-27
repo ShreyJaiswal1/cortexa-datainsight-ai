@@ -1,6 +1,6 @@
-import { Poppins } from 'next/font/google'
-import { ClerkProvider } from '@clerk/nextjs';
-import { ThemeProvider } from '@/components/theme-provider'; // Import ThemeProvider
+import { Poppins } from 'next/font/google';
+import { ThemeProvider } from '@/components/theme-provider';
+import ClerkAppearance from '@/components/clerk-appearance';
 import './globals.css';
 
 const poppins = Poppins({
@@ -8,41 +8,30 @@ const poppins = Poppins({
   weight: ['400', '700'],
   variable: '--font-poppins',
 });
-// src/app/layout.js
+
 export const metadata = {
-  title: {
-    default: 'Cortexa',
-    template: '%s | Cortexa',
-  },
+  title: { default: 'Cortexa', template: '%s | Cortexa' },
   description: 'Smart AI powered data analysis tool',
-  icons: {
-    icon: [
-      // 16x16 / 32x32
-      { url: '../../public/logo.png', type: 'image/png' }, // 32x32 or 64x64
-    ],
-  },
+  icons: { icon: [{ url: '/logo.png', type: 'image/png' }] },
 };
 
 export default function RootLayout({ children }) {
-
   return (
-    <ClerkProvider
-      appearance={{
-        theme: 'simple',
-      }}
-    >
-      <html lang='en' className={poppins.variable} suppressHydrationWarning>
-        <body>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
+    <html lang='en' className={poppins.variable} suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ClerkAppearance
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
           >
             {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          </ClerkAppearance>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
