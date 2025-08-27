@@ -56,40 +56,6 @@ Cortexa DataInsight AI is a modern full-stack web application that combines the 
 - **Turbopack**: Ultra-fast bundler for development
 - **TypeScript Support**: Type-safe development environment
 
-## 📁 Project Structure
-
-```
-cortexa-datainsight-ai/
-├── Backend/
-│   ├── app/
-│   │   └── api/
-│   │       ├── __init__.py
-│   │       ├── data.py          # Data analysis endpoints
-│   │       └── image.py         # Image analysis endpoints
-│   ├── main.py                  # FastAPI application entry point
-│   ├── example.env              # Environment variables template
-│   └── .gitignore
-├── Frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── dashboard/       # Main application dashboard
-│   │   │   ├── sign-in/         # Authentication pages
-│   │   │   ├── sign-up/
-│   │   │   ├── layout.js        # Root layout
-│   │   │   └── page.js          # Landing page
-│   │   ├── components/
-│   │   │   ├── ui/              # Reusable UI components
-│   │   │   ├── chat-interface.jsx
-│   │   │   ├── message-list.jsx
-│   │   │   ├── chat-input.jsx
-│   │   │   └── theme-provider.jsx
-│   │   └── middleware.js        # Clerk authentication middleware
-│   ├── package.json
-│   ├── tailwind.config.js
-│   └── next.config.mjs
-└── LICENSE
-```
-
 ## 🚀 Getting Started
 
 ### Prerequisites
