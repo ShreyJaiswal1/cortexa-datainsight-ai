@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/ShreyJaiswal1/cortexa-datainsight-ai/refs/heads/main/Frontend/public/cortexabanner.svg" alt="Cortexa Banner" width="100%" />
 </p>
 
-# Cortexa DataInsight AI 🧠
+# [Cortexa DataInsight AI](https://cortexa.lazyshrey.xyz) 🧠
 
 **A Smart AI-Powered Data Analysis Tool**
 
