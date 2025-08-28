@@ -1,6 +1,7 @@
 import { Poppins } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import ClerkAppearance from '@/components/clerk-appearance';
+import Script from 'next/script';
 import './globals.css';
 
 const poppins = Poppins({
@@ -11,14 +12,56 @@ const poppins = Poppins({
 
 export const metadata = {
   title: { default: 'Cortexa', template: '%s | Cortexa' },
-  description: 'Smart AI powered data analysis tool',
-  icons: { icon: [{ url: '/logo.png', type: 'image/png' }] },
+  description: 'Smart AI-powered data analysis tool.',
+  keywords: ['Cortexa', 'AI', 'data analysis', 'analytics', 'chat'],
+  applicationName: 'Cortexa',
+  category: 'technology',
+  alternates: { canonical: '/' },
+  icons: {
+    icon: [{ url: '/logo.png', type: 'image/png' }],
+    apple: [{ url: '/logo.png', sizes: '180x180' }]
+  },
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0b1221' },
+  ],
+  openGraph: {
+    type: 'website',
+    url: SITE_URL + '/',
+    title: 'Cortexa — AI-powered data analysis',
+    description: 'Ask questions, analyze data, and act—fast.',
+    siteName: 'Cortexa',
+    locale: 'en_US',
+    images: [{ url: '/logo.png', width: 1200, height: 630, alt: 'Cortexa' }],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    'max-image-preview': 'large',
+    'max-snippet': -1,
+    'max-video-preview': -1,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang='en' className={poppins.variable} suppressHydrationWarning>
-      <body>
+      <body className='min-h-screen antialiased'>
+        {/* a11y: skip to content */}
+        <a
+          href='#content'
+          className='sr-only focus:not-sr-only focus:absolute focus:p-2'
+        >
+          Skip to content
+        </a>
+
         <ThemeProvider
           attribute='class'
           defaultTheme='system'
@@ -28,9 +71,24 @@ export default function RootLayout({ children }) {
           <ClerkAppearance
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
           >
-            {children}
+            <main id='content'>{children}</main>
           </ClerkAppearance>
         </ThemeProvider>
+
+        {/* JSON-LD: WebSite + Organization (tweak name/links as needed) */}
+        <Script
+          id='ld-website'
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Cortexa',
+              url: SITE_URL + '/',
+              inLanguage: 'en',
+            }),
+          }}
+        />
       </body>
     </html>
   );

@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { MessageList } from './message-list';
 import { ChatInput } from './chat-input';
+import { useAuth } from '@clerk/nextjs';
 
 export function ChatInterface() {
   const [messages, setMessages] = useState([]);
@@ -10,6 +11,7 @@ export function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef(null);
   const bottomRef = useRef(null);
+  const { getToken } = useAuth();
 
   useEffect(() => {
     return () => {
@@ -24,7 +26,14 @@ export function ChatInterface() {
       bottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isLoading]);
-
+  async function authHeaders() {
+    try {
+      const token = await getToken(); // or plain getToken()
+      return token ? { Authorization: `Bearer ${token}` } : {};
+    } catch {
+      return {};
+    }
+  }
   const addMessage = (msg) => setMessages((prev) => [...prev, msg]);
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000';
   useEffect(() => {
@@ -32,14 +41,19 @@ export function ChatInterface() {
       const bins = e?.detail?.bins ?? 20;
       setIsLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/api/data/histogram/?bins=${bins}`);
+        const res = await fetch(
+          `${API_BASE}/api/data/histogram/?bins=${bins}`,
+          {
+            headers: await authHeaders(),
+          }
+        );
         const data = await res.json();
 
-addMessage({
-  type: 'bot',
-  contentType: 'chart',
-  content: data,
-});
+        addMessage({
+          type: 'bot',
+          contentType: 'chart',
+          content: data,
+        });
       } catch (err) {
         console.error(err);
         addMessage({
@@ -66,15 +80,21 @@ addMessage({
     setIsLoading(true);
 
     try {
-      const { data } = await axios.post(`${API_BASE}/api/data/chat/`, {
-        text: userMessage,
-      });
+      const { data } = await axios.post(
+        `${API_BASE}/api/data/chat/`,
+        {
+          text: userMessage,
+        },
+        {
+          headers: await authHeaders(),
+        }
+      );
       addMessage({ type: 'bot', content: data.response, contentType: 'text' });
     } catch (err) {
       console.error(err);
       addMessage({
         type: 'bot',
-        content: '⚠️ Something went wrong. Try again.',
+        content: '⚠️ Please upload the data file first.',
         contentType: 'text',
       });
     } finally {
@@ -116,7 +136,12 @@ addMessage({
       } else {
         response = await axios.post(
           `${API_BASE}/api/data/upload-data/`,
-          formData
+          formData,
+          {
+            headers: {
+              ...(await authHeaders()),
+            },
+          }
         );
         if (!response.data.analysis_result) {
           addMessage({

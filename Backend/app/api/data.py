@@ -1,11 +1,13 @@
-from fastapi import APIRouter, UploadFile, File, Body, Query, Header, HTTPException
-from typing import Optional, Annotated
+# app/api/data.py
+from fastapi import APIRouter, UploadFile, File, Body, Query, HTTPException, Depends
+from typing import Optional, Dict
+import io, os
 import pandas as pd
 import numpy as np
-import io, os
 from dotenv import load_dotenv
-
 from groq import Groq
+
+from .auth import get_user_id  # <-- Clerk userId dependency
 
 load_dotenv()
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -13,30 +15,20 @@ groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 router = APIRouter()
 
 # ---- In-memory storage ----
+# Per-user in-memory data to stop cross-user leaks
+USER_DATAFRAMES: Dict[str, pd.DataFrame] = {}
 
-df_in_memory: Optional[pd.DataFrame] = None
+def _put_df(user_id: str, df: pd.DataFrame) -> None:
+    USER_DATAFRAMES[user_id] = df
 
-SESSION_DATA: dict[str, pd.DataFrame] = {}
-
-
-def _get_df_for_session(session_id: Optional[str]) -> Optional[pd.DataFrame]:
-    if session_id and session_id in SESSION_DATA:
-        return SESSION_DATA[session_id]
-    return globals().get("df_in_memory")
-
-
-def _set_df_for_session(session_id: Optional[str], df: pd.DataFrame) -> None:
-    global df_in_memory
-    if session_id:
-        SESSION_DATA[session_id] = df
-    else:
-        df_in_memory = df
+def _get_df(user_id: str) -> Optional[pd.DataFrame]:
+    return USER_DATAFRAMES.get(user_id)
 
 
 @router.post("/upload-data/")
 async def upload_data_file(
     file: UploadFile = File(...),
-    x_session_id: Optional[str] = Header(None, alias="X-Session-Id"),
+    user_id: str = Depends(get_user_id),
 ):
     try:
         content = await file.read()
@@ -49,11 +41,17 @@ async def upload_data_file(
         else:
             raise ValueError("Unsupported file type")
     except Exception as e:
+        print("UPLOAD PARSE ERROR:", e)
         raise HTTPException(status_code=400, detail=f"Failed to parse file: {e}")
 
-    _set_df_for_session(x_session_id, df)
+    _put_df(user_id, df)
 
-    analysis = df.describe(include="all").fillna("N/A").to_dict()
+    # Keep your analysis contract (numeric describe by default)
+    try:
+        analysis = df.describe(include=[np.number]).fillna("N/A").to_dict()
+    except Exception:
+        analysis = df.describe(include="all").fillna("N/A").to_dict()
+
     return {
         "message": "File processed successfully!",
         "filename": file.filename,
@@ -64,15 +62,15 @@ async def upload_data_file(
 @router.post("/chat/")
 async def chat_with_data(
     payload: dict = Body(...),
-    x_session_id: Optional[str] = Header(None, alias="X-Session-Id"),
+    user_id: str = Depends(get_user_id),
 ):
-    df = _get_df_for_session(x_session_id)
+    df = _get_df(user_id)
     if df is None:
         raise HTTPException(status_code=404, detail="No dataset available. Upload a file first.")
 
     user_text = payload.get("text", "")
 
-    # compact dataset context to guide the model (keeps your flow intact)
+    # lightweight dataset context
     try:
         try:
             desc = df.describe(include=[np.number]).to_string()
@@ -92,27 +90,27 @@ async def chat_with_data(
             f"User question: {user_text}"
         )
 
-        response = groq_client.chat.completions.create(
+        resp = groq_client.chat.completions.create(
             model="openai/gpt-oss-120b",
             messages=[
                 {"role": "system", "content": "You are a helpful data analysis assistant."},
                 {"role": "user", "content": prompt},
             ],
         )
-
-        return {"response": response.choices[0].message.content}
+        answer = resp.choices[0].message.content
+        return {"response": answer}
     except Exception as e:
-        print(f"Chat Error: {e}")
-        return {"response": "Sorry, I encountered an error trying to answer your question."}
+        print(f"Chat error: {e}")
+        return {"response": "Sorry, I hit an error while answering that."}
 
 
 @router.get("/histogram/")
 async def histogram(
     col: Optional[str] = None,
     bins: int = Query(20, ge=2, le=200),
-    x_session_id: Optional[str] = Header(None, alias="X-Session-Id"),
+    user_id: str = Depends(get_user_id),
 ):
-    df = _get_df_for_session(x_session_id)
+    df = _get_df(user_id)
     if df is None:
         raise HTTPException(status_code=404, detail="No dataset in memory. Upload a file first.")
 

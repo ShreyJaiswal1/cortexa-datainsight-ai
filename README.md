@@ -74,7 +74,7 @@ Cortexa DataInsight AI is a modern full-stack web application that combines the 
 
 2. **Install Python dependencies**
    ```bash
-   pip install fastapi uvicorn pandas groq google-generativeai python-dotenv pillow python-multipart
+   pip install -r requirements.txt
    ```
 
 3. **Configure environment variables**
@@ -86,6 +86,7 @@ Cortexa DataInsight AI is a modern full-stack web application that combines the 
    ```env
    GROQ_API_KEY=your_groq_api_key_here
    GOOGLE_API_KEY=your_google_api_key_here
+   CLERK_ISSUER=your_clerk_issuer_url
    ```
 
 4. **Start the backend server**

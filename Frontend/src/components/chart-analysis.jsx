@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useAuth } from '@clerk/nextjs';
 
 export default function ChartAnalysis({ data, columns = [] }) {
   const [chartData, setChartData] = useState(data);
@@ -16,6 +17,16 @@ export default function ChartAnalysis({ data, columns = [] }) {
   const [hoverIdx, setHoverIdx] = useState(null);
 
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000';
+  const { getToken } = useAuth();
+
+  async function authHeaders() {
+    try {
+      const token = await getToken({ template: 'backend' });
+      return token ? { Authorization: `Bearer ${token}` } : {};
+    } catch {
+      return {};
+    }
+  }
 
   useEffect(() => {
     if (!selectedCol) return;
@@ -24,7 +35,8 @@ export default function ChartAnalysis({ data, columns = [] }) {
         const res = await fetch(
           `${API_BASE}/api/data/histogram/?col=${encodeURIComponent(
             selectedCol
-          )}&bins=20`
+          )}&bins=20`,
+          { headers: await authHeaders() }
         );
         const json = await res.json();
         setChartData(json);
