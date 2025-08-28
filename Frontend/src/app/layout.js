@@ -10,7 +10,10 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
+const SITE_URL = 'https://cortexa.lazyshrey.xyz';
+
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: 'Cortexa', template: '%s | Cortexa' },
   description: 'Smart AI-powered data analysis tool.',
   keywords: ['Cortexa', 'AI', 'data analysis', 'analytics', 'chat'],
@@ -19,7 +22,7 @@ export const metadata = {
   alternates: { canonical: '/' },
   icons: {
     icon: [{ url: '/logo.png', type: 'image/png' }],
-    apple: [{ url: '/logo.png', sizes: '180x180' }]
+    apple: [{ url: '/logo.png', sizes: '180x180' }],
   },
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#ffffff' },
