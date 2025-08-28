@@ -94,7 +94,7 @@ export function ChatInterface() {
       console.error(err);
       addMessage({
         type: 'bot',
-        content: '⚠️ Please upload the data file first.',
+        content: '⚠️ Please upload the data or image file first.',
         contentType: 'text',
       });
     } finally {
