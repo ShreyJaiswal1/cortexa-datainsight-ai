@@ -24,10 +24,6 @@ export const metadata = {
     icon: [{ url: '/logo.png', type: 'image/png' }],
     apple: [{ url: '/logo.png', sizes: '180x180' }],
   },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0b1221' },
-  ],
   openGraph: {
     type: 'website',
     url: SITE_URL + '/',
