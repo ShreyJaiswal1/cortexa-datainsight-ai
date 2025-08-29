@@ -209,7 +209,7 @@ export default function HomePage() {
         <ul className='space-y-4 text-gray-700 dark:text-gray-300'>
           <li>
             <strong>What file formats can I upload?</strong> — CSV, Excel
-            (xls/xlsx), JSON, and Parquet.
+            (xls/xlsx) and JSON
           </li>
           <li>
             <strong>Is my data secure?</strong> — Yes. Files are processed in
