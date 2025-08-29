@@ -46,6 +46,9 @@ export const metadata = {
       'max-snippet': -1,
       'max-video-preview': -1,
     },
+    verification: {
+      google: 'u34mtd5063aDvCNTOBnt1pyh4E4SLu_WGF_wnPS9jro', // paste token from Search Console
+    },
   },
 };
 
