@@ -36,6 +36,15 @@ export default function Header() {
               GitHub
               <span className='pointer-events-none absolute left-0 -bottom-1 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full' />
             </a>
+            <a
+              href='https://discord.com/invite/BCKjPjhBrm'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='group relative transition-colors hover:text-foreground'
+            >
+              Discord
+              <span className='pointer-events-none absolute left-0 -bottom-1 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full' />
+            </a>
           </nav>
 
           <div className='ml-2 flex items-center gap-3'>
@@ -91,6 +100,14 @@ export default function Header() {
                   className='hover:text-primary transition-colors'
                 >
                   GitHub
+                </a>
+                <a
+                  href='https://discord.com/invite/BCKjPjhBrm'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='hover:text-primary transition-colors'
+                >
+                  Discord
                 </a>
               </nav>
               <div className='mt-auto'>
